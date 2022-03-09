@@ -173,7 +173,8 @@ app$callback(
       filtered <- filtered %>%
         group_by(ID, Year)%>%
         summarise(Age = mean(Age), Height = mean(Height), Weight = mean(Weight), Sex = first(Sex)) %>%
-        unnest(Sex)
+        unnest(Sex) %>%
+        distinct()
       
       fig1 <- ggplot(filtered, aes(x=Height,fill = Sex))+ 
         geom_histogram(bins=50,alpha = 0.5,position = 'identity')+
@@ -189,13 +190,10 @@ app$callback(
         geom_histogram(bins=50,alpha = 0.5,position = 'identity')+
         labs(x="Age (years)", title = "Distribution of Age")+
         scale_y_continuous(labels = scales::label_number_si())+
-        theme(
-          pan_hist
+        theme_hist
       return(list(ggplotly(fig1),ggplotly(fig2),ggplotly(fig3)))
     }
 )
-
-
 
 # app$run_server(debug = T )
 app$run_server(host= '0.0.0.0')
